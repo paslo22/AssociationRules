@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+# https://docs.python.org/3/library/collections.html#defaultdictw-examples
 from collections import defaultdict
+
+from itertools import combinations, chain
+
+from datetime import datetime
 
 
 def open_dataset(file):
@@ -72,27 +77,41 @@ def candidate_gen(current_set, length):
     return set([i.union(j) for i in current_set for j in current_set if len(i.union(j)) == length])
 
 
-def apriori(minsup=0.3, minconf=0.8, dataset='../datasets/chess.dat'):
-    # https://docs.python.org/3/library/collections.html#defaultdictw-examples
+def apriori(minsup=0.3, minconf=0.8, dataset='../datasets/example.dat'):
+    start = datetime.now()
     c1, transactions = read_dataset(open_dataset(dataset))
     set_counts = defaultdict(int)
     total_set = dict()
-    # rules = dict()
 
     # c1 = init_pass(transactions)  # line 1
     f1 = frequents_from_candidates(transactions, minsup, set_counts, c1)
-    print(c1)
-    print(f1)
     k = 2
     current_set = f1
     while current_set:
         total_set[k - 1] = current_set
         ck = candidate_gen(current_set, k)
-        print(ck)
         fk = frequents_from_candidates(transactions, minsup, set_counts, ck)
-        print(fk)
         current_set = fk
         k += 1
 
+    # TODO: Find a better way to do this
+    tts_set = dict()
+    for key, value in total_set.items():
+        if key != 1:
+            tts_set[key] = value
 
-apriori()
+    rules = []
+    for key, value in tts_set.items():
+        for item in value:
+            for subset in map(frozenset, [x for x in chain(*[combinations(item, i + 1) for i, a in enumerate(item)])]):
+                rest = item.difference(subset)
+                if len(rest) > 0:
+                    conf = set_counts[item] / set_counts[subset]
+                    if conf >= minconf:
+                        rules.append(((tuple(subset), tuple(rest)),
+                                      conf))
+    for r in rules:
+        print (str(r[0][0]) + '->' + str(r[0][1]) + '. Conf: ' + str(r[1]))
+    elapsed = datetime.now() - start
+    print(elapsed)
+    return rules, elapsed
