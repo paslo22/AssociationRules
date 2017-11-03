@@ -6,7 +6,7 @@ from itertools import combinations, chain
 
 from datetime import datetime
 
-from celery import current_task
+from celery import current_task, states
 from celery.exceptions import Ignore
 
 import json
@@ -83,7 +83,7 @@ class Apriori(object):
                 if candidate.issubset(transaction):
                     self.set_counts[candidate] += 1
                     set_counts_local[candidate] += 1
-            self.update_state()
+            self.update_state(states.PENDING)
         for candidate, count in set_counts_local.items():
             if (count / len(self.transactions)) >= self.minsup:
                 frequents_items.add(candidate)
@@ -102,8 +102,8 @@ class Apriori(object):
         """
         return set([i.union(j) for i in current_set for j in current_set if len(i.union(j)) == length])
 
-    def update_state(self, **kwargs):
-        current_task.update_state(state='PROGRESS', meta={
+    def update_state(self, estado):
+        current_task.update_state(state=estado, meta={
             'elapsed': find_now(self.start),
             'c1': json.dumps(self.c1, cls=SetEncoder),
             'total_set': json.dumps(self.total_set, cls=SetEncoder),
@@ -113,15 +113,15 @@ class Apriori(object):
     def apriori(self):
         self.start = datetime.now()
         self.c1, self.transactions = read_dataset(open_dataset(self.file))
-        self.update_state()
+        self.update_state(states.PENDING)
         # c1 = init_pass(transactions)  # line 1
         self.f1 = self.frequents_from_candidates(self.c1)
-        self.update_state()
+        self.update_state(states.PENDING)
         k = 2
         current_set = self.f1
         while current_set:
             self.total_set[k - 1] = current_set
-            self.update_state()
+            self.update_state(states.PENDING)
             ck = self.candidate_gen(current_set, k)
             current_set = self.frequents_from_candidates(ck)
             k += 1
@@ -141,7 +141,8 @@ class Apriori(object):
                         if conf >= self.minconf:
                             self.rules.append(((tuple(subset), tuple(rest)),
                                               round(conf, 2)))
-                self.update_state()
-            self.update_state()
+                self.update_state(states.PENDING)
+            self.update_state(states.PENDING)
+        self.update_state(states.SUCCESS)
         raise Ignore()
         return self.rules, datetime.now() - self.start
