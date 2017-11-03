@@ -102,13 +102,14 @@ class Apriori(object):
         """
         return set([i.union(j) for i in current_set for j in current_set if len(i.union(j)) == length])
 
-    def update_state(self, estado):
-        current_task.update_state(state=estado, meta={
-            'elapsed': find_now(self.start),
-            'c1': json.dumps(self.c1, cls=SetEncoder),
-            'total_set': json.dumps(self.total_set, cls=SetEncoder),
-            'rules': json.dumps(self.rules)
-        })
+    def update_state(self, state):
+        if current_task:
+            current_task.update_state(state=state, meta={
+                'elapsed': find_now(self.start),
+                'c1': json.dumps(self.c1, cls=SetEncoder),
+                'total_set': json.dumps(self.total_set, cls=SetEncoder),
+                'rules': json.dumps(self.rules)
+            })
 
     def apriori(self):
         self.start = datetime.now()
@@ -144,5 +145,8 @@ class Apriori(object):
                 self.update_state(states.PENDING)
             self.update_state(states.PENDING)
         self.update_state(states.SUCCESS)
-        raise Ignore()
-        return self.rules, datetime.now() - self.start
+        if current_task:
+            raise Ignore()
+        for r in self.rules:
+            print (str(r[0][0]) + '->' + str(r[0][1]) + '. Conf: ' + str(r[1]))
+        return len(self.rules), str(datetime.now() - self.start)
