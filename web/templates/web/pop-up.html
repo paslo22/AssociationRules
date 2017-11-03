@@ -81,7 +81,6 @@
 				$.getJSON('/estadoTask/',{
 					task_id: task_id
 				}, function(json, textStatus) {
-					console.log(json)
 					$('#time').html('Tiempo: '+json['info']['elapsed'])
 					mostrar_proceso(json['info']['c1'], json['info']['total_set'])
 					if (json['info']['rules']) {
