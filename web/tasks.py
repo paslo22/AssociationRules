@@ -5,10 +5,6 @@ from .apriori import Apriori
 from .models import Archivo
 
 
-# @shared_task
-# def async_apriori(minsup, minconf, dataset):
-#     apriori(minsup, minconf, dataset)
-
 @shared_task
 def async_apriori(minsup, minconf, pk):
     archive = Archivo.objects.get(pk=pk)
