@@ -1,0 +1,108 @@
+{% extends "web/base.html" %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col s12">
+				<div class="card-panel teal lighten-2">
+					<div class="card-content">
+						<h4 class="white-text card-title">Dataset: {{filename}}</h4>
+						<div class="chip">
+							<i class="material-icons"></i>
+							<span id="minsup">Minsup: {{minsup}}</span>
+						</div>
+						<div class="chip">
+							<i class="material-icons"></i>
+							<span id="minconf">Minconf: {{minconf}}</span>
+						</div>
+						<div class="chip">
+							<span id="time"></span>
+						</div>
+						<div class="chip yellow" id="pro-chip">
+							<span id="pro">Procesando</span>
+						</div>
+						<ul class="collapsible popout" data-collapsible="expandable">
+							<li>
+								<div class="collapsible-header"><i class="material-icons">filter_drama</i>Procesamiento</div>
+								<div class="collapsible-body grey lighten-4"><span id="proc">Procesando.</span></div>
+							</li>
+							<li>
+								<div class="collapsible-header active"><i class="material-icons">place</i>Reglas</div>
+								<div class="collapsible-body teal lighten-4">
+									<table class="striped">
+										<thead>
+											<tr>
+											<th>Regla</th>
+											<th>Confianza</th>
+											</tr>
+										</thead>
+										<tbody id="rules">
+										</tbody>
+									</table>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
+
+{% block extraScripts %}
+	<script>
+		{% if task_id %}
+			var mostrar_reglas = function(rules) {
+				var rules = $.parseJSON(rules)
+				var output = ''
+				$.each(rules, function(index, val) {
+					output += '<tr><td>N°'+(index+1)+': ('+val[0][0]+')<i class="tiny material-icons">arrow_forward</i>('+val[0][1]+')</td><td>'+val[1]+'</td></tr>'
+				});
+				$('#rules').html(output)
+			}
+			var mostrar_proceso = function(c1, fk) {
+				var c1 = $.parseJSON(c1)
+				var fk = $.parseJSON(fk)
+				var output = '<p>C1 ('+c1.length+' elementos):</br>Elementos: '
+				$.each(c1, function(index, val) {
+					output += '('+val+') '
+				});
+				output += '</p>'
+				$.each(fk, function(index, val) { 
+					output += '<p>F'+parseInt(index)+' ('+val.length+' elementos):</br>Elementos: '
+					$.each(val, function(i, value) {
+						output += '('+value+') '
+					});
+					output += '</p>'
+				});
+				$('#proc').html(output);
+			}
+			var task_id = '{{task_id}}';
+			var checkear_estado = function() {
+				$.getJSON('/estadoTask/',{
+					task_id: task_id
+				}, function(json, textStatus) {
+					console.log(json)
+					$('#time').html('Tiempo: '+json['info']['elapsed'])
+					mostrar_proceso(json['info']['c1'], json['info']['total_set'])
+					if (json['info']['rules']) {
+						mostrar_reglas(json['info']['rules'])
+					}
+					if (json['status'] == 'SUCCESS'){
+						$('#pro-chip').removeClass('yellow');
+						$('#pro-chip').addClass('green');
+						$('#pro').html('Terminado');
+						clearInterval(timer);
+					}
+				}).fail(function() {
+					$('#pro-chip').removeClass('yellow');
+					$('#pro-chip').removeClass('green');
+					$('#pro-chip').addClass('red');
+					$('#pro').html('TimeOut');
+					clearInterval(timer);
+				});
+			}
+			checkear_estado();
+			var timer = setInterval(checkear_estado, 5000);
+		{% endif %}
+	</script>
+{% endblock extraScripts %}

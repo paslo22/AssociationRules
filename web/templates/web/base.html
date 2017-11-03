@@ -1,0 +1,39 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Reglas de asociaci&oacute;n - IA UTN</title>
+		<link type="text/css" rel="stylesheet" href="{% static 'web/css/materialize.min.css' %}"  media="screen,projection"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
+		<link rel="icon" type="image/png" href="{% static 'web/img/favicon.ico' %}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta charset="UTF-8">
+		<meta name="mobile-web-app-capable" content="yes">
+		{% block extraHead %}{% endblock extraHead %}
+	</head>
+	<body>
+		<header>
+			<nav>
+				<div class="nav-wrapper teal darken-3">
+					<a href="#" class="brand-logo center">Reglas de asociaci&oacute;n</a>
+				</div>
+			</nav>
+		</header>
+		<main>
+			{% block content %}{% endblock content %}
+		</main>
+		<script type="text/javascript" src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'web/js/materialize.min.js' %}"></script>
+		<script type="text/javascript">
+			$( document ).ready(function() {
+				{% if messages %}
+					{% for message in messages %}
+						Materialize.toast("{{message}}", 4000);
+					{% endfor %}
+				{% endif %}
+			});
+		</script>
+		{% block extraScripts %}{% endblock extraScripts %}
+	</body>
+</html>
