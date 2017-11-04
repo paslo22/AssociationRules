@@ -78,7 +78,7 @@
 			}
 			var task_id = '{{task_id}}';
 			var checkear_estado = function() {
-				$.getJSON('/estadoTask/',{
+				$.getJSON('/tpi/estadoTask/',{
 					task_id: task_id
 				}, function(json, textStatus) {
 					$('#time').html('Tiempo: '+json['info']['elapsed'])

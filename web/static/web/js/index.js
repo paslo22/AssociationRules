@@ -9,7 +9,7 @@ $(document).ready(function() {
 			contentType: false
 		}).done(function(data) {
 			window.open(
-				'/popup/?task_id='+data['task_id']+'&filename='+data['filename']+'&minsup='+data['minsup']+'&minconf='+data['minconf'],
+				'popup/?task_id='+data['task_id']+'&filename='+data['filename']+'&minsup='+data['minsup']+'&minconf='+data['minconf'],
 				'',
 				"width=1000,height=600"
 			);

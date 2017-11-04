@@ -12,17 +12,24 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		{% block extraHead %}{% endblock extraHead %}
 	</head>
-	<body>
+	<body style="display:flex; min-height:100vh; flex-direction: column;">
 		<header>
 			<nav>
 				<div class="nav-wrapper teal darken-3">
-					<a href="#" class="brand-logo center">Reglas de asociaci&oacute;n</a>
+					<a href="#" class="brand-logo center">TPI - IA</a>
 				</div>
 			</nav>
 		</header>
-		<main>
+		<main style="flex: 1 0 auto;">
 			{% block content %}{% endblock content %}
 		</main>
+		<footer class="page-footer teal darken-3">
+			<div class="footer-copyright">
+				<div class="container">
+					Realizado por grupo 4. Marinoff, Muchutti, Ruiz Diaz.
+				</div>
+			</div>
+		</footer>
 		<script type="text/javascript" src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>
 		<script type="text/javascript" src="{% static 'web/js/materialize.min.js' %}"></script>
 		<script type="text/javascript">
