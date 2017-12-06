@@ -1,4 +1,10 @@
 $(document).ready(function() {
+	$('#minsup').change(function(e) {
+		$('#minsup-label').html('Soporte mínimo: <strong>' + $(this).val() + '</strong>')
+	});
+	$('#minconf').change(function(e) {
+		$('#minconf-label').html('Confianza mínima: <strong>' + $(this).val() + '</strong>')
+	});
 	$('#form').submit(function(e) {
 		e.preventDefault();
 		$.ajax({
@@ -10,8 +16,7 @@ $(document).ready(function() {
 		}).done(function(data) {
 			window.open(
 				'popup/?task_id='+data['task_id']+'&filename='+data['filename']+'&minsup='+data['minsup']+'&minconf='+data['minconf'],
-				'',
-				"width=1000,height=600"
+				''
 			);
 		});
 	});

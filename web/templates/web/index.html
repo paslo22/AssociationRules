@@ -25,12 +25,12 @@
 						<div class="card-content">
 							<span class="card-title">Ejecutar algoritmo apriori</span>
 							<p class="range-field">
-								<label for="minconf" style="color:black;">Confianza m&iacute;nima</label>
-								<input class="validate" name="minconf" type="range" step="0.05" min="0" max="1" value="0.8"/>
+								<label for="minsup" id="minsup-label" style="color:black;">Soporte m&iacute;nimo: <strong>0.3</strong></label>
+								<input class="validate" name="minsup" id="minsup" type="range" step="0.05" min="0.05" max="1" value="0.3"/>
 							</p>
 							<p class="range-field">
-								<label for="minsup" style="color:black;">Soporte m&iacute;nimo</label>
-								<input class="validate" name="minsup" type="range" step="0.05" min="0" max="1" value="0.3"/>
+								<label for="minconf" id="minconf-label" style="color:black;">Confianza m&iacute;nima: <strong>0.8</strong></label>
+								<input class="validate" name="minconf" id="minconf" type="range" step="0.05" min="0.05" max="1" value="0.8"/>
 							</p>
 							<div class="file-field input-field">
 								<div class="btn">

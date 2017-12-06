@@ -26,7 +26,7 @@
 								<div class="collapsible-body grey lighten-4"><span id="proc">Procesando.</span></div>
 							</li>
 							<li>
-								<div class="collapsible-header active"><i class="material-icons">place</i>Reglas</div>
+								<div class="collapsible-header active"><i class="material-icons">place</i>Reglas generadas:<span id="rules-cant"> 0</span></div>
 								<div class="collapsible-body teal lighten-4">
 									<table class="striped">
 										<thead>
@@ -53,6 +53,7 @@
 		{% if task_id %}
 			var mostrar_reglas = function(rules) {
 				var rules = $.parseJSON(rules)
+				$('#rules-cant').html(' '+ rules.length)
 				var output = ''
 				$.each(rules, function(index, val) {
 					output += '<tr><td>N°'+(index+1)+': ('+val[0][0]+')<i class="tiny material-icons">arrow_forward</i>('+val[0][1]+')</td><td>'+val[1]+'</td></tr>'
