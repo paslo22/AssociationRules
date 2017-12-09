@@ -26,16 +26,16 @@
 							<span class="card-title">Ejecutar algoritmo apriori</span>
 							<p class="range-field">
 								<label for="minsup" id="minsup-label" style="color:black;">Soporte m&iacute;nimo: <strong>0.3</strong></label>
-								<input class="validate" name="minsup" id="minsup" type="range" step="0.05" min="0.05" max="1" value="0.3"/>
+								<input class="validate tooltipped" data-position="left" data-delay="50" data-tooltip="Elegir mínimo de soporte. Puede utilizar el mouse o las flechas del teclado." name="minsup" id="minsup" type="range" step="0.05" min="0.05" max="1" value="0.3"/>
 							</p>
 							<p class="range-field">
 								<label for="minconf" id="minconf-label" style="color:black;">Confianza m&iacute;nima: <strong>0.8</strong></label>
-								<input class="validate" name="minconf" id="minconf" type="range" step="0.05" min="0.05" max="1" value="0.8"/>
+								<input class="validate tooltipped"  data-position="left" data-delay="50" data-tooltip="Elegir mínimo de confianza. Puede utilizar el mouse o las flechas del teclado." name="minconf" id="minconf" type="range" step="0.05" min="0.05" max="1" value="0.8"/>
 							</p>
 							<div class="file-field input-field">
 								<div class="btn">
 									<span>DATASET</span>
-									<input class="validate" name="filename" type="file" required>
+									<input class="validate tooltipped" data-position="left" data-delay="50" data-tooltip="Elegir archivo dataset." name="filename" type="file" required>
 								</div>
 								<div class="file-path-wrapper">
 									<input class="file-path validate" type="text">
