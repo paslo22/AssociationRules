@@ -132,13 +132,9 @@ class Apriori(object):
             current_set = self.frequents_from_candidates(ck)
             k += 1
 
-        # TODO: Find a better way to do this
-        tts_set = dict()
         for key, value in self.total_set.items():
-            if key != 1:
-                tts_set[key] = value
-
-        for key, value in tts_set.items():
+            if key == 1:
+                continue
             for item in value:
                 for subset in map(frozenset, [x for x in chain(*[combinations(item, i + 1) for i, a in enumerate(item)])]):
                     rest = item.difference(subset)
