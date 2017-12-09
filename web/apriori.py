@@ -3,6 +3,7 @@
 from collections import defaultdict, Set
 
 from itertools import combinations, chain
+import operator
 
 from datetime import datetime
 
@@ -108,7 +109,11 @@ class Apriori(object):
                 'elapsed': find_now(self.start),
                 'c1': json.dumps(self.c1, cls=SetEncoder),
                 'total_set': json.dumps(self.total_set, cls=SetEncoder),
-                'rules': json.dumps(self.rules)
+                'rules': json.dumps(sorted(
+                    self.rules,
+                    key=operator.itemgetter(1, 2),
+                    reverse=True
+                ))
             })
 
     def apriori(self):
@@ -140,8 +145,10 @@ class Apriori(object):
                     if len(rest) > 0:
                         conf = self.set_counts[item] / self.set_counts[subset]
                         if conf >= self.minconf:
+                            sup = self.set_counts[item] / \
+                                len(self.transactions)
                             self.rules.append(((tuple(subset), tuple(rest)),
-                                              round(conf, 2)))
+                                               round(conf, 2), round(sup, 2)))
                 self.update_state(states.PENDING)
             self.update_state(states.PENDING)
         self.update_state(states.SUCCESS)

@@ -32,6 +32,7 @@
 										<thead>
 											<tr>
 											<th>Regla</th>
+											<th>Soporte</th>
 											<th>Confianza</th>
 											</tr>
 										</thead>
@@ -56,7 +57,7 @@
 				$('#rules-cant').html(' '+ rules.length)
 				var output = ''
 				$.each(rules, function(index, val) {
-					output += '<tr><td>N°'+(index+1)+': ('+val[0][0]+')<i class="tiny material-icons">arrow_forward</i>('+val[0][1]+')</td><td>'+val[1]+'</td></tr>'
+					output += '<tr><td>N°'+(index+1)+': ('+val[0][0]+')<i class="tiny material-icons">arrow_forward</i>('+val[0][1]+')</td><td>'+val[2]+'</td><td>'+val[1]+'</td></tr>'
 				});
 				$('#rules').html(output)
 			}
