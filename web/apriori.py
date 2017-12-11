@@ -2,7 +2,6 @@
 # https://docs.python.org/3/library/collections.html#defaultdictw-examples
 from collections import defaultdict, Set
 
-from itertools import combinations, chain
 import operator
 
 from datetime import datetime
