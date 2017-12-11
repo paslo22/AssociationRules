@@ -9,13 +9,12 @@ Implementation of the Association Rules algorithm in Python with Django + Celery
 
 ### Recomendations:
 * [Virtualenv through pip](https://virtualenv.pypa.io/en/stable/installation/)
-* [GitHub](https://gist.github.com/derhuerst/1b15ff4652a867391f03)
 
 ### Instalation:
 #### On Linux:
 ```bash
-mkdir AssociationRules && cd AssociationRules
-git clone https://github.com/paslo22/AssociationRules.git .
+unzip AssociationRules.zip
+cd AssociationRules-master
 pip install -r requirements.txt
 # Broker (Redis) instalation:
 sudo apt-get install redis-server
