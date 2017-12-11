@@ -126,7 +126,6 @@ class Apriori(object):
                 consecuents_valids.add(consecuent)
                 self.rules.append(((tuple(rest), tuple(consecuent)),
                                    round(conf, 2), round(sup, 2)))
-            self.update_state(states.PENDING)
         return consecuents_valids
 
     def gen_rules(self, frecuent, consecuents, k, m):
@@ -141,7 +140,6 @@ class Apriori(object):
                     self.rules.append(((tuple(rest), tuple(candidate)),
                                        round(conf, 2), round(sup, 2)))
                     next_h.add(candidate)
-                self.update_state(states.PENDING)
             self.gen_rules(frecuent, next_h, k, m + 1)
 
     def apriori(self):
@@ -165,6 +163,7 @@ class Apriori(object):
                 continue
             for item in value:
                 self.gen_rules(item, self.rules_one_consecuent(item), key, 1)
+            self.update_state(states.PENDING)
         self.update_state(states.SUCCESS)
         if current_task:
             raise Ignore()
