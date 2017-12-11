@@ -116,6 +116,34 @@ class Apriori(object):
                 ))
             })
 
+    def rules_one_consecuent(self, frecuent):
+        consecuents_valids = set()
+        for consecuent in map(frozenset, combinations(frecuent, 1)):
+            rest = frecuent.difference(consecuent)
+            conf = self.set_counts[frecuent] / self.set_counts[rest]
+            sup = self.set_counts[frecuent] / len(self.transactions)
+            if conf >= self.minconf and sup >= self.minsup:
+                consecuents_valids.add(consecuent)
+                self.rules.append(((tuple(rest), tuple(consecuent)),
+                                   round(conf, 2), round(sup, 2)))
+            self.update_state(states.PENDING)
+        return consecuents_valids
+
+    def gen_rules(self, frecuent, consecuents, k, m):
+        if consecuents and k > m + 1:
+            candidates = self.candidate_gen(consecuents, m + 1)
+            next_h = set()
+            for candidate in candidates:
+                rest = frecuent.difference(candidate)
+                conf = self.set_counts[frecuent] / self.set_counts[rest]
+                sup = self.set_counts[frecuent] / len(self.transactions)
+                if conf >= self.minconf and sup >= self.minsup:
+                    self.rules.append(((tuple(rest), tuple(candidate)),
+                                       round(conf, 2), round(sup, 2)))
+                    next_h.add(candidate)
+                self.update_state(states.PENDING)
+            self.gen_rules(frecuent, next_h, k, m + 1)
+
     def apriori(self):
         self.start = datetime.now()
         self.c1, self.transactions = read_dataset(open_dataset(self.file))
@@ -136,17 +164,7 @@ class Apriori(object):
             if key == 1:
                 continue
             for item in value:
-                for subset in map(frozenset, [x for x in chain(*[combinations(item, i + 1) for i, a in enumerate(item)])]):
-                    rest = item.difference(subset)
-                    if len(rest) > 0:
-                        conf = self.set_counts[item] / self.set_counts[subset]
-                        if conf >= self.minconf:
-                            sup = self.set_counts[item] / \
-                                len(self.transactions)
-                            self.rules.append(((tuple(subset), tuple(rest)),
-                                               round(conf, 2), round(sup, 2)))
-                self.update_state(states.PENDING)
-            self.update_state(states.PENDING)
+                self.gen_rules(item, self.rules_one_consecuent(item), key, 1)
         self.update_state(states.SUCCESS)
         if current_task:
             raise Ignore()
